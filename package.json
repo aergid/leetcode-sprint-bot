@@ -1,0 +1,22 @@
+{
+  "name": "leetcode-a-day",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "svartstrem",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.0.0",
+    "leetcode-cli": "^2.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
