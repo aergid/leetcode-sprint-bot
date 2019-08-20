@@ -1,4 +1,5 @@
 require('leetcode-cli/lib/cli')
+require('dotenv').config()
 
 const config = require('leetcode-cli/lib/config');
 const plugin = require('leetcode-cli/lib/plugin')
@@ -31,7 +32,18 @@ initPlugins(function (e) { })
 
 class LeetcodeClient {
 
-  getAny(type) {
+  login() {
+    core.login({ 
+      login: 'develer@gmail.com',
+      pass: process.env.LEETCODE_TOKEN
+    }, function (e, user) {
+      if(e) console.log(e)
+    })
+  }
+  
+  async getAny(type) {
+    await this.login()
+
     return new Promise((resolve, reject) => {
       core.filterProblems(`G${type}`, (e, problems) => {
         if (e) {
