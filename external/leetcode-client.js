@@ -6,9 +6,10 @@ const core = require('leetcode-cli/lib/core')
 const log = require('leetcode-cli/lib/log')
 const chalk = require('leetcode-cli/lib/chalk')
 const show = require('leetcode-cli/lib/commands/show')
+var _ = require('underscore');
 
 log.init()
-log.setLevel('TRACE')
+log.setLevel('INFO')
 
 chalk.enabled = false;
 chalk.init();
@@ -29,11 +30,28 @@ function initPlugins(cb) {
 initPlugins(function (e) { })
 
 class LeetcodeClient {
- 
+
   getAny(type) {
     return new Promise((resolve, reject) => {
-      core.filterProblems(`G${type}`, problem => resolve(problem))
-    }); 
+      core.filterProblems(`G${type}`, (e, problems) => {
+        if (e) {
+          console.log(e)
+          reject(e)
+        }
+        else {
+          problems = problems.filter(function (x) {
+            if (x.state === 'ac') return false;
+            if (x.locked) return false;
+            return true;
+          });
+          if (problems.length === 0) return log.fail('Problem not found!');
+
+          const problem = _.sample(problems);
+          console.log(problem.name)
+          resolve(problem.name)
+        }
+      })
+    });
   }
 }
 
