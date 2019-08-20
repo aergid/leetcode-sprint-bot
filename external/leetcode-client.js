@@ -6,7 +6,6 @@ const plugin = require('leetcode-cli/lib/plugin')
 const core = require('leetcode-cli/lib/core')
 const log = require('leetcode-cli/lib/log')
 const chalk = require('leetcode-cli/lib/chalk')
-const show = require('leetcode-cli/lib/commands/show')
 var _ = require('underscore');
 
 log.init()
@@ -34,8 +33,8 @@ class LeetcodeClient {
 
   login() {
     core.login({ 
-      login: 'develer@gmail.com',
-      pass: process.env.LEETCODE_TOKEN
+      login: process.env.LEETCODE_LOGIN,
+      pass: process.env.LEETCODE_PASS
     }, function (e, user) {
       if(e) console.log(e)
     })
