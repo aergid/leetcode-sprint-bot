@@ -1,13 +1,16 @@
 require('process')
 require('dotenv').config()
-const { spawn } = require('child_process');
+
+const nearley = require("nearley");
+const grammar = require("./problem-grammar.js");
+const problemParser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 
 const Discord = require('discord.js')
 const discordClient = new Discord.Client()
 const leetcodeClient = require('./external/leetcode-client')
 const later = require('later');
 
-var lastRequestDate;
+const prefix = "!";
 var problemsChannel;
 var problems = {
   'easy': "",
@@ -30,58 +33,68 @@ function initProblemsChannel() {
     .find(ch => ch.name == 'general')
 }
 
+async function renewProblemOfADay(hardness) {
+  const pinned = await problemsChannel.fetchPinnedMessages()
+  for([id, old] of pinned) {
+    console.log('old msg')
+    console.log(old.content)
+    console.log('parse result')
+    console.log(problemParser.feed(old.content))
+    var problemMsg = problemParser.feed(old.content)[0]
+    if(problemMsg.hardnes === hardness) {
+      var today = (new Date()).toDateString
+      if (problemMsg.date !== today) {
+        problemMsg.unpin()
+        newProblemBody = await leetcodeClient.getAny(hardness)
+        problemsChannel.send(`[${today}][${hardness}]\n${newProblemBody}`)
+      }
+    }
+  }
+  const body = await leetcodeClient.getAny(hardness)
+}
+
 discordClient.on('ready', async () => {
   console.log(`Logged in as ${discordClient.user.tag}!`)
-  initProblemsChannel()
+  await initProblemsChannel()
 })
 
-discordClient.on('message', async msg => {
-  if (msg.author.username === 'leetcode-sprint-bot'
-    && msg.content.startsWith('---------------')
-    && !msg.pinned
-  ) {
-    msg.pin().catch(reason => { })
-  }
+discordClient.on("message", async msg => {
+  if (msg.channel.type !== "text") return;
+  if (!msg.content.startsWith(prefix)) return;
+  // if (!msg.channel.permissionsFor(client.user).has("SEND_MESSAGES")) return;
 
-  if (msg.content === 'help') {
-    msg.reply(`
+  const args = msg.content.split(" ").slice(1);
+  const cmd = msg.content.slice(prefix.length).split(" ")[0];
+
+  switch (cmd) {
+    case "help":
+      msg.channel.send(`
 Hello! I am 'leetcode-a-day' bot. I will pick at random 
 one hard problem every Monday,
 one medium problem every Monday and Wednessday and
 one easy problem every day, so you can practice non-stop.
     
-Type 'problems' to see chosen problems.`)
-  } else if (msg.content === 'problems') {
+Type '${prefix}list' to see chosen problems.`
+      );
+      break;
 
-    var today = new Date().getDay()
-    var todayDate = new Date().toDateString()
-    msg.reply(`[${todayDate}] problems of a day:\n`)
-
-    if (lastRequestDate != todayDate) {
-      lastRequestDate = todayDate
-
-      for (type in problems) {
-        console.log('awaiting problem body')
-        body = await leetcodeClient.getAny(type)
-        console.log(body)
-        problems[type] = body
-        msg.reply(type + "-------------------\n" + problems[type])
+    case "list":
+      const pinned = await problemsChannel.fetchPinnedMessages()
+      for ([id, problem] of pinned) {
+        console.log(problem)
+        msg.reply("\n" + problem.content)
       }
-    } else {
-      for (type in problems) {
-        msg.reply(type + "-------------------\n" + problems[type])
-      }
-    }
+      break;
   }
 })
-
 
 var sched = later.parse.recur()
   .every(5).minute();
 
-later.setInterval(() => {
+later.setInterval(async () => {
   console.log(new Date());
   problemsChannel.send("Wie geht's?")
+  renewProblemOfADay("Easy")
 }, sched);
 
 process.on('unhandledRejection', (reason, p) => {

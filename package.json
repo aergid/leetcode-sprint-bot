@@ -15,7 +15,8 @@
     "discord.js": "^11.5.1",
     "dotenv": "^8.0.0",
     "later": "^1.2.0",
-    "leetcode-cli": "^2.6.1"
+    "leetcode-cli": "^2.6.1",
+    "nearley": "^2.18.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
