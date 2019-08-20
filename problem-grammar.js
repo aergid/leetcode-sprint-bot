@@ -98,7 +98,7 @@ var grammar = {
             );
         }
         },
-    {"name": "problemMessage", "symbols": ["dateTag", "hardTag", {"literal":"\n"}, "body"], "postprocess": d => new Object({date: d[0], hardness: d[1], problem: d[3]})},
+    {"name": "problemMessage", "symbols": ["dateTag", "hardTag", "nl", "body"], "postprocess": d => new Object({date: d[0], hardness: d[1], problem: d[3]})},
     {"name": "weekDay$string$1", "symbols": [{"literal":"M"}, {"literal":"o"}, {"literal":"n"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "weekDay", "symbols": ["weekDay$string$1"]},
     {"name": "weekDay$string$2", "symbols": [{"literal":"T"}, {"literal":"u"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
@@ -148,9 +148,14 @@ var grammar = {
     {"name": "hardness$string$3", "symbols": [{"literal":"H"}, {"literal":"a"}, {"literal":"r"}, {"literal":"d"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "hardness", "symbols": ["hardness$string$3"]},
     {"name": "hardTag", "symbols": [{"literal":"["}, "hardness", {"literal":"]"}], "postprocess": d => d[1].join('')},
-    {"name": "body$ebnf$1", "symbols": []},
-    {"name": "body$ebnf$1", "symbols": ["body$ebnf$1", /./], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "body", "symbols": ["body$ebnf$1"], "postprocess": d => d[0].join("")}
+    {"name": "body$ebnf$1", "symbols": ["any"]},
+    {"name": "body$ebnf$1", "symbols": ["body$ebnf$1", "any"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "body", "symbols": ["body$ebnf$1"], "postprocess": d => d[0].join("")},
+    {"name": "any", "symbols": [/./]},
+    {"name": "any", "symbols": ["nl"]},
+    {"name": "nl", "symbols": [{"literal":"\n"}]},
+    {"name": "nl$string$1", "symbols": [{"literal":"\r"}, {"literal":"\n"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "nl", "symbols": ["nl$string$1"]}
 ]
   , ParserStart: "problemMessage"
 }

@@ -58,8 +58,7 @@ class LeetcodeClient {
           if (problems.length === 0) return log.fail('Problem not found!');
 
           const problem = _.sample(problems);
-          console.log(problem.name)
-          resolve(problem.name)
+          resolve(`${problem.name}\n${problem.link}`)
         }
       })
     });

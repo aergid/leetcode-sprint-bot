@@ -2,7 +2,7 @@
 @builtin "number.ne"     # `int`, `decimal`, and `percentage` number primitives
 #[Tue Aug 20 2019][Easy|Medium|Hard]:\n<body>
 
-problemMessage -> dateTag hardTag "\n" body {% d => new Object({date: d[0], hardness: d[1], problem: d[3]}) %}
+problemMessage -> dateTag hardTag nl body {% d => new Object({date: d[0], hardness: d[1], problem: d[3]}) %}
 
 weekDay -> "Mon"
          | "Tue"
@@ -35,4 +35,8 @@ hardness -> "Easy" | "Medium" | "Hard"
 
 hardTag -> "[" hardness "]" {% d => d[1].join('') %}
 
-body    -> .:* {% d => d[0].join("") %}
+body    -> any:+ {% d => d[0].join("") %}
+
+any     -> . | nl
+
+nl      -> "\n" | "\r\n"
