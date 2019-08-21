@@ -21,8 +21,8 @@ async function cleanupPinnedProblems() {
 
 function initProblemsChannel() {
   problemsChannel = discordClient.guilds
-    .find(guild => guild.name === 'svarttest').channels
-    .find(ch => ch.name === 'general')
+    .find(guild => guild.name === process.env.GUILD).channels
+    .find(ch => ch.name === process.env.CHANNEL)
 }
 
 function getProblemParser() {
