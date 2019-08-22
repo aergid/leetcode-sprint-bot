@@ -71,7 +71,6 @@ class LeetcodeClient {
   }
 
   submit(id, lang, text, reply) {
-    console.log("submitting")
     core.getProblem(id, function (e, problem) {
       if (e) return console.log(e);
 

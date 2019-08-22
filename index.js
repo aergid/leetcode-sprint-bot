@@ -77,7 +77,7 @@ discordClient.on('ready', async () => {
 discordClient.on("message", async msg => {
   if (msg.channel.type !== "text") return;
   if (!msg.content.startsWith(prefix)) return;
-  // if (!msg.channel.permissionsFor(discordClient.user).has("SEND_MESSAGES")) return;
+  if (!msg.channel.permissionsFor(discordClient.user).has("SEND_MESSAGES")) return;
 
   const words = msg.content.slice(prefix.length).split(" ");
   const cmd = words.shift();
@@ -92,7 +92,7 @@ one easy problem every day, so you can practice non-stop.
 
 Commands:
 '${prefix}list' to see chosen problems.
-'${prefix}submit <id> <lang> <code>' to judge your solution.
+'${prefix}submit <id> <lang> <code>' to judge your solution. Paste formatted code in form \\\`\\\`\\\`lang ... \\\`\\\`\\\`
 `);
       break;
 
@@ -107,7 +107,9 @@ Commands:
       try {
         const problemId = words.shift()
         const lang = words.shift()
-        const code = words.join(" ")
+        var code = words.join(" ")
+        code = code.replace(/^[\s\n]*```[^\s\n]+/, '').replace(/```[\s\n]*$/, '')
+
         leetcodeClient.submit(problemId, lang, code, (result) => {
           problemsChannel.send(`${msg.author} submitted problem ${problemId}\n${JSON.stringify(result)}`)
           if (result.state === 'Accepted') {
