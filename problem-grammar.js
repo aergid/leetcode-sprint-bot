@@ -98,7 +98,7 @@ var grammar = {
             );
         }
         },
-    {"name": "problemMessage", "symbols": ["dateTag", "hardTag", "nl", "body"], "postprocess": d => new Object({date: d[0], hardness: d[1], problem: d[3]})},
+    {"name": "problemMessage", "symbols": ["dateTag", "hardTag", "idTag", "nl", "body"], "postprocess": d => new Object({date: d[0], hardness: d[1], id: d[2], problem: d[4]})},
     {"name": "weekDay$string$1", "symbols": [{"literal":"M"}, {"literal":"o"}, {"literal":"n"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "weekDay", "symbols": ["weekDay$string$1"]},
     {"name": "weekDay$string$2", "symbols": [{"literal":"T"}, {"literal":"u"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
@@ -141,11 +141,11 @@ var grammar = {
     {"name": "year$string$1", "symbols": [{"literal":"2"}, {"literal":"0"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "year", "symbols": ["year$string$1", /[1-2]/, /[0-9]/], "postprocess": d => d.join('')},
     {"name": "dateTag", "symbols": [{"literal":"["}, "weekDay", {"literal":" "}, "month", {"literal":" "}, "day", {"literal":" "}, "year", {"literal":"]"}], "postprocess": d => d.slice(1,8).join('')},
-    {"name": "hardness$string$1", "symbols": [{"literal":"E"}, {"literal":"a"}, {"literal":"s"}, {"literal":"y"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "hardness$string$1", "symbols": [{"literal":"e"}, {"literal":"a"}, {"literal":"s"}, {"literal":"y"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "hardness", "symbols": ["hardness$string$1"]},
-    {"name": "hardness$string$2", "symbols": [{"literal":"M"}, {"literal":"e"}, {"literal":"d"}, {"literal":"i"}, {"literal":"u"}, {"literal":"m"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "hardness$string$2", "symbols": [{"literal":"m"}, {"literal":"e"}, {"literal":"d"}, {"literal":"i"}, {"literal":"u"}, {"literal":"m"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "hardness", "symbols": ["hardness$string$2"]},
-    {"name": "hardness$string$3", "symbols": [{"literal":"H"}, {"literal":"a"}, {"literal":"r"}, {"literal":"d"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "hardness$string$3", "symbols": [{"literal":"h"}, {"literal":"a"}, {"literal":"r"}, {"literal":"d"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "hardness", "symbols": ["hardness$string$3"]},
     {"name": "hardTag", "symbols": [{"literal":"["}, "hardness", {"literal":"]"}], "postprocess": d => d[1].join('')},
     {"name": "body$ebnf$1", "symbols": ["any"]},
@@ -153,6 +153,8 @@ var grammar = {
     {"name": "body", "symbols": ["body$ebnf$1"], "postprocess": d => d[0].join("")},
     {"name": "any", "symbols": [/./]},
     {"name": "any", "symbols": ["nl"]},
+    {"name": "id", "symbols": ["int"]},
+    {"name": "idTag", "symbols": [{"literal":"["}, "id", {"literal":"]"}], "postprocess": d => d[1].join('')},
     {"name": "nl", "symbols": [{"literal":"\n"}]},
     {"name": "nl$string$1", "symbols": [{"literal":"\r"}, {"literal":"\n"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "nl", "symbols": ["nl$string$1"]}

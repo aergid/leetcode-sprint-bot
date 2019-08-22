@@ -1,12 +1,18 @@
 require('leetcode-cli/lib/cli')
 require('dotenv').config()
 
+var fs = require("fs");
+var tmp = require('tmp');
+var _ = require('underscore');
+const util = require('util');
+const asyncTmpFile = util.promisify(tmp.file);
+
 const config = require('leetcode-cli/lib/config');
 const plugin = require('leetcode-cli/lib/plugin')
 const core = require('leetcode-cli/lib/core')
+const session = require('leetcode-cli/lib/session');
 const log = require('leetcode-cli/lib/log')
 const chalk = require('leetcode-cli/lib/chalk')
-var _ = require('underscore');
 
 log.init()
 log.setLevel('INFO')
@@ -32,19 +38,19 @@ initPlugins(function (e) { })
 class LeetcodeClient {
 
   login() {
-    core.login({ 
+    core.login({
       login: process.env.LEETCODE_LOGIN,
       pass: process.env.LEETCODE_PASS
     }, function (e, user) {
-      if(e) console.log(e)
+      if (e) console.log(e)
     })
   }
-  
+
   async getAny(type) {
     await this.login()
 
     return new Promise((resolve, reject) => {
-      core.filterProblems(`G${type}`, (e, problems) => {
+      core.filterProblems(`${type[0]}`, (e, problems) => {
         if (e) {
           console.log(e)
           reject(e)
@@ -58,10 +64,67 @@ class LeetcodeClient {
           if (problems.length === 0) return log.fail('Problem not found!');
 
           const problem = _.sample(problems);
-          resolve(`${problem.name}\n${problem.link}`)
+          resolve(problem)
         }
       })
     });
+  }
+
+  submit(id, lang, text, reply) {
+    console.log("submitting")
+    core.getProblem(id, function (e, problem) {
+      if (e) return console.log(e);
+
+      var ext = '.py'
+      switch (lang.toLowerCase()) {
+        case "python":
+        case "python3":
+          ext = "py"
+          break;
+        case "c":
+          ext = "c"
+          break;
+        case "c++":
+          ext = "cpp"
+          break;
+        case "scala":
+          ext = ".scala"
+          break;
+      }
+      var options = {
+        template: `${id}.XXXXXXXX.${ext}`,
+        keep: true
+      }
+
+      tmp.file(options, (err, path, fd, cleanupCallback) => {
+        try {
+          if (err) throw err;
+
+          fs.writeFileSync(path, text)
+          problem.file = path;
+          problem.lang = lang;
+
+          core.submitProblem(problem, function (e, results) {
+            if (e) return log.fail(e);
+
+            const result = results[0];
+
+            const stateMsg = result.state;
+            const infoMsg = `${result.passed}/${result.total} cases passed (${result.runtime})`
+            console.log("result: %s", infoMsg)
+            reply({state: stateMsg, extra: infoMsg})
+
+            if (result.ok) {
+              session.updateStat('ac', 1);
+              session.updateStat('ac.set', problem.fid);
+              core.updateProblem(problem, { state: 'ac' });
+            }
+          });
+        } finally {
+          cleanupCallback();
+        }
+      });
+    })
   }
 }
 

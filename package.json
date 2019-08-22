@@ -16,7 +16,8 @@
     "dotenv": "^8.0.0",
     "later": "^1.2.0",
     "leetcode-cli": "^2.6.1",
-    "nearley": "^2.18.0"
+    "nearley": "^2.18.0",
+    "tmp": "^0.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
