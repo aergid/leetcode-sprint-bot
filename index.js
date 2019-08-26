@@ -71,7 +71,6 @@ async function renewProblemOfADay(hardness) {
 discordClient.on('ready', async () => {
   console.log(`Logged in as ${discordClient.user.tag}!`)
   await initProblemsChannel()
-  renewProblemOfADay('easy')
 })
 
 discordClient.on("message", async msg => {
@@ -123,14 +122,9 @@ Commands:
   }
 })
 
-var everyDaySched = later.parse.recur()
-  .on(10).hour().onWeekday()
-
-var everyMonAndWedSched = later.parse.recur()
-  .on(10).hour().on(2, 4).dayOfWeek()
-
-var everyMonSched = later.parse.recur()
-  .on(10).hour().on(2).dayOfWeek()
+var everyDaySched = later.parse.cron('0 10 * * 1-5 *')
+var everyMonAndWedSched = later.parse.cron('0 10 * * 1,3 *')
+var everyMonSched = later.parse.cron('0 10 * * 1 *')
 
 later.setInterval(async () => {
   renewProblemOfADay("easy")
@@ -143,7 +137,6 @@ later.setInterval(async () => {
 later.setInterval(async () => {
   renewProblemOfADay("hard")
 }, everyMonSched);
-
 
 process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
