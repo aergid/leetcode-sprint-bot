@@ -61,7 +61,6 @@ async function renewProblemOfADay(hardness) {
     var newMsg = await problemsChannel.send(`[${today}][${hardness}][${newProblem.id}]\n${getProblemHeader(newProblem)}`)
     newMsg.pin()
 
-    console.log(!messagesByType[hardness])
     if (messagesByType[hardness]) {
       messagesByType[hardness].unpin()
     }

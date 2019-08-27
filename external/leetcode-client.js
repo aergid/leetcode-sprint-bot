@@ -50,7 +50,7 @@ class LeetcodeClient {
     await this.login()
 
     return new Promise((resolve, reject) => {
-      core.filterProblems(`${type[0]}`, (e, problems) => {
+      core.filterProblems({ query: type[0], tag: ['algorithms']}, (e, problems) => {
         if (e) {
           console.log(e)
           reject(e)
@@ -87,7 +87,7 @@ class LeetcodeClient {
           ext = "cpp"
           break;
         case "scala":
-          ext = ".scala"
+          ext = ".sc"
           break;
       }
       var options = {
