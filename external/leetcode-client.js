@@ -83,7 +83,7 @@ class LeetcodeClient {
         case "c":
           ext = "c"
           break;
-        case "c++":
+        case "cpp":
           ext = "cpp"
           break;
         case "scala":

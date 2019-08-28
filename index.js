@@ -9,8 +9,9 @@ const Discord = require('discord.js')
 const discordClient = new Discord.Client()
 const leetcodeClient = require('./external/leetcode-client')
 const prefix = "!";
-var problemsChannel;
 
+var problemsChannel;
+var solutionsChannel;
 
 async function cleanupPinnedProblems() {
   const pins = await problemsChannel.fetchPinnedMessages()
