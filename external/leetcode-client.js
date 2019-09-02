@@ -23,7 +23,6 @@ config.init()
 
 function initPlugins(cb) {
   if (plugin.init()) {
-    plugin.save();
     return cb();
   } else {
     plugin.installMissings(function (e) {
