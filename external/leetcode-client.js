@@ -35,6 +35,17 @@ function initPlugins(cb) {
 }
 initPlugins(function (e) { })
 
+var language_extensions = {
+  python: 'py',
+  python3: 'py',
+  c: 'c',
+  cpp: 'cpp',
+  scala: 'sc',
+  java: 'java',
+  javascript: 'js',
+  js: 'js'
+};
+
 class LeetcodeClient {
 
   login() {
@@ -50,7 +61,7 @@ class LeetcodeClient {
     await this.login()
 
     return new Promise((resolve, reject) => {
-      core.filterProblems({ query: type[0], tag: ['algorithms']}, (e, problems) => {
+      core.filterProblems({ query: type[0], tag: ['algorithms'] }, (e, problems) => {
         if (e) {
           console.log(e)
           reject(e)
@@ -75,26 +86,13 @@ class LeetcodeClient {
       if (e) return console.log(e);
 
       var ext = '.py'
-      switch (lang.toLowerCase()) {
-        case "python":
-        case "python3":
-          ext = "py"
-          break;
-        case "c":
-          ext = "c"
-          break;
-        case "cpp":
-          ext = "cpp"
-          break;
-        case "scala":
-          ext = ".sc"
-          break;
+      if (_.has(language_extensions, lang.toLowerCase())) {
+        ext = language_extensions[lang.toLowerCase()]
       }
       var options = {
         template: `${id}.XXXXXXXX.${ext}`,
         keep: true
       }
-
       tmp.file(options, (err, path, fd, cleanupCallback) => {
         try {
           if (err) throw err;
@@ -111,7 +109,7 @@ class LeetcodeClient {
             const stateMsg = result.state;
             const infoMsg = `${result.passed}/${result.total} cases passed (${result.runtime})`
             console.log("result: %s", infoMsg)
-            reply({state: stateMsg, extra: infoMsg})
+            reply({ state: stateMsg, extra: infoMsg })
 
             if (result.ok) {
               session.updateStat('ac', 1);
