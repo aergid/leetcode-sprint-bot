@@ -16,7 +16,7 @@ const log = require('leetcode-cli/lib/log')
 const chalk = require('leetcode-cli/lib/chalk')
 
 log.init()
-log.setLevel('INFO')
+log.setLevel('DEBUG')
 
 chalk.enabled = false;
 chalk.init();
@@ -24,7 +24,8 @@ config.init()
 
 function initLeetcodeSubsystem(cb) {
   try {
-    fs.mkdirSync(path.join(__dirname, '/.lc'))
+    console.log("creating path " + path.join(__dirname, '.lc/leetcode'))
+    fs.mkdirSync(path.join(__dirname, '.lc/leetcode'), {recursive: true})
   } catch (err) {
     if (err.code !== 'EEXIST') throw err
   }  
@@ -38,7 +39,7 @@ function initLeetcodeSubsystem(cb) {
     });
   }
 }
-initLeetcodeSubsystem(function (e) { })
+
 
 var language_extensions = {
   python: 'py',
@@ -54,6 +55,7 @@ var language_extensions = {
 class LeetcodeClient {
 
   constructor() {
+    initLeetcodeSubsystem(function (e) { })
     this.login()
   }
 
