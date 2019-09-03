@@ -27,6 +27,7 @@ function initLeetcodeSubsystem(cb) {
     console.log("creating path " + path.join(__dirname, '..', '.lc/leetcode'))
     fs.mkdirSync(path.join(__dirname, '..', '.lc',))
     fs.mkdirSync(path.join(__dirname, '..', '.lc', 'leetcode'))
+    fs.mkdirSync(path.join(__dirname, '..', '.lc', 'leetcode', 'cache'))
   } catch (err) {
     if (err.code !== 'EEXIST') throw err
   }  
