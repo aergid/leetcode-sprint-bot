@@ -53,6 +53,10 @@ var language_extensions = {
 
 class LeetcodeClient {
 
+  constructor() {
+    this.login()
+  }
+
   login() {
     core.login({
       login: process.env.LEETCODE_LOGIN,
