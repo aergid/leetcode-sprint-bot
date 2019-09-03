@@ -59,7 +59,7 @@ async function renewProblemOfADay(hardness) {
 
   if (!problemsByType[hardness] || problemsByType[hardness].date !== today) {
     newProblem = await leetcodeClient.getAny(hardness)
-    var newMsg = await problemsChannel.send(`[${today}][${hardness}][${newProblem.fid}]\n${getProblemHeader(newProblem)}`)
+    var newMsg = await problemsChannel.send(`[${today}][${hardness}][${newProblem.id}]\n${getProblemHeader(newProblem)}`)
     newMsg.pin()
 
     if (messagesByType[hardness]) {
