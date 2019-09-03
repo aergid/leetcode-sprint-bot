@@ -2,6 +2,7 @@ require('leetcode-cli/lib/cli')
 require('dotenv').config()
 
 var fs = require("fs");
+var path = require('path')
 var tmp = require('tmp');
 var _ = require('underscore');
 const util = require('util');
@@ -21,7 +22,12 @@ chalk.enabled = false;
 chalk.init();
 config.init()
 
-function initPlugins(cb) {
+function initLeetcodeSubsystem(cb) {
+  try {
+    fs.mkdirSync(path.join(__dirname, '/.lc'))
+  } catch (err) {
+    if (err.code !== 'EEXIST') throw err
+  }  
   if (plugin.init()) {
     return cb();
   } else {
@@ -32,7 +38,7 @@ function initPlugins(cb) {
     });
   }
 }
-initPlugins(function (e) { })
+initLeetcodeSubsystem(function (e) { })
 
 var language_extensions = {
   python: 'py',
