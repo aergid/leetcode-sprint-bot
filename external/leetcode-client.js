@@ -16,7 +16,7 @@ const log = require('leetcode-cli/lib/log')
 const chalk = require('leetcode-cli/lib/chalk')
 
 log.init()
-log.setLevel('DEBUG')
+log.setLevel('INFO')
 
 chalk.enabled = false;
 chalk.init();
