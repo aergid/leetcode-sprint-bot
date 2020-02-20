@@ -28,9 +28,17 @@ function initLeetcodeSubsystem(cb) {
     fs.mkdirSync(path.join(__dirname, '..', '.lc',))
     fs.mkdirSync(path.join(__dirname, '..', '.lc', 'leetcode'))
     fs.mkdirSync(path.join(__dirname, '..', '.lc', 'leetcode', 'cache'))
+    leetcodeUserData = `
+    {
+        "login": "${process.env.LEETCODE_LOGIN}",
+        "loginCSRF": "",
+        "sessionCSRF":  "${process.env.LEETCODE_SESSION_CSRF}",
+        "sessionId":   "${process.env.LEETCODE_SESSION_ID}"
+    }`
+    fs.writeFileSync((path.join(__dirname, '..', '.lc', 'leetcode', 'user.json')), leetcodeUserData)
   } catch (err) {
     if (err.code !== 'EEXIST') throw err
-  }  
+  }
   if (plugin.init()) {
     return cb();
   } else {
