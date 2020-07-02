@@ -21,5 +21,6 @@ Bot uses [leetcode-cli](https://github.com/skygragon/leetcode-cli) to communicat
 
 ## Where it lives
 
-Deploed in [Heroku](https://www.heroku.com/)
+Deployed in [Heroku](https://www.heroku.com/)
+
 Working on [Leetcode Grind Discord Server](https://discord.gg/pmhneAM)
