@@ -18,3 +18,8 @@ Commands:
 - '!submit \<id\> \<lang\> \<code\> -- to judge your solution. Paste formatted code in form \`\`\`lang ... \`\`\`
 
 Bot uses [leetcode-cli](https://github.com/skygragon/leetcode-cli) to communicate with leetcode.
+
+## Where it lives
+
+Deploed in [Heroku](https://www.heroku.com/)
+Working on [Leetcode Grind Discord Server](https://discord.gg/pmhneAM)
